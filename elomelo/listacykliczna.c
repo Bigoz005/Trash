@@ -13,8 +13,7 @@ struct node* createelement(int data){
 	return el;
 }
 
-struct node* addend(struct node* root,int data)
-{
+struct node* addend(struct node* root,int data){
 	struct node *wsk=createelement(data);
 	if(root== NULL){
 		wsk->next = NULL;
@@ -30,8 +29,7 @@ struct node* addend(struct node* root,int data)
 	}
 }
 
-struct node* addfront(struct node* root,int data)
-{
+struct node* addfront(struct node* root,int data){
 	struct node *wsk=createelement(data);
 	if(root == NULL){
 		wsk->next = NULL;
@@ -43,11 +41,45 @@ struct node* addfront(struct node* root,int data)
 	}
 }
 
+struct node* delend(struct node* root){
+	struct node* wart;
+	struct node* wsk = root;
+
+	if(root != NULL){
+		if(root->next){
+			while((wsk->next)->next != NULL){
+				wsk = wsk->next;
+		}
+		wart = wsk->next;
+		wsk->next = NULL;
+	}
+	else{
+		wsk=root;
+		root=NULL;
+	}
+ }
+	else{
+		wart=NULL;
+	}
+	return wart;
+}
+
+struct node* delfront(struct node* root){
+	if(root != NULL){
+		struct node* wsk = root;
+		root = root->next;
+		return wsk;
+	}
+	else{
+		return NULL;
+	}
+}
+
 
 int main(){
 struct node *root= NULL;
 addend(root, 15);
 
-free();
+/*free();*/
 return 0;
 }
