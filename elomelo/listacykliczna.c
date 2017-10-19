@@ -6,11 +6,6 @@ struct node{
 	int dane;
 };
 
-struct list{
-	struct node* head;
-
-};
-
 struct node* createelement(int data){
 	struct node* el = (struct node*) malloc (sizeof(struct node));
 	el->dane = data;
@@ -18,36 +13,41 @@ struct node* createelement(int data){
 	return el;
 }
 
-void addelement(struct list* l ,struct node* el){
-	if(l->head == NULL){
-		el->next= NULL;
-		l->head= el;
-	}
-	else
-	{
-		el->next =l->head;
-		l->head = el;
-	}
-}
-
-void addlastelement(struct list *l, struct node* el)
+struct node* addend(struct node* root,int data)
 {
-	if (l->head == NULL){
-		el->next = NULL;
-		l->head = el;
+	struct node *wsk=createelement(data);
+	if(root== NULL){
+		wsk->next = NULL;
+		root = wsk;
 	}
-	else
-	{
-		struct node *wsk = l->head;
-		while(wsk->next!=NULL)
-		wsk = wsk->next; 
-		el->next = NULL;
-		wsk->next = el; 
-		el->next = wsk;
+	else{
+		struct node *wart = root;
+		while(wart->next != NULL){
+			 wart = wart->next;
+		 }
+	wsk->next = NULL;
+	wart->next = wsk;
 	}
 }
-int main(){
 
+struct node* addfront(struct node* root,int data)
+{
+	struct node *wsk=createelement(data);
+	if(root == NULL){
+		wsk->next = NULL;
+		root = wsk;
+	}
+	else{
+	wsk->next = root;
+	root = wsk;
+	}
+}
+
+
+int main(){
+struct node *root= NULL;
+addend(root, 15);
+
+free();
 return 0;
 }
-
