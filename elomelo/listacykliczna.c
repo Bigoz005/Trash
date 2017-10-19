@@ -75,6 +75,17 @@ struct node* delfront(struct node* root){
 	}
 }
 
+int lenght(struct node* root){
+
+int i = 0;
+struct node* wsk = root;
+
+while(wsk){
+	i++;
+	wsk= wsk->next;
+}
+	return i;
+}
 
 int main(){
 struct node *root= NULL;
