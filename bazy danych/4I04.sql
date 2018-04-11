@@ -254,4 +254,98 @@ AND unitprice <>'10'
 AND unitprice <>'97';
 
 SELECT * FROM [vProdukty_Cena] ORDER BY [UnitPrice];
+
+
+INSERT INTO [dzialy](ID_dzialy, nazwa) VALUES(5,'MAGAZYN');
+
+INSERT INTO [dzialy](nazwa) VALUES('OCHRONA');
+
+INSERT INTO [dzialy](nazwa) VALUES('OCHRONA2'),('OCHRONA3'),('OCHRONA3')
+
+INSERT INTO [dzialy](nazwa)
+						(SELECT nazwa+'_BIS' FROM [dzialy] WHERE ID_dzialy IN(2,4));
+CREATE TABLE test_prac
+(
+	ID_pracownicy BIGINT NOT NULL,
+	imie VARCHAR(50) NULL,
+	nazwisko VARCHAR(50) NULL,
+	wiek INT NULL,
+	nazwa_dzialu VARCHAR(max) NOT NULL,
+	data DATETIME NOT NULL,
+	brutto MONEY NOT NULL
+);
+
+INSERT INTO [test_prac](ID_pracownicy, imie, nazwisko, wiek, nazwa_dzialu, data, brutto) VALUES(209405,'Micha³','Nawrot', 21,'magazyn',2018-04-11, 2550.00);
+INSERT INTO [test_prac](ID_pracownicy, imie, nazwisko, wiek, nazwa_dzialu, data, brutto)
+SELECT p.ID_pracownicy,p.Imie,p.Nazwisko,p.Wiek,d.Nazwa, z.Data, z.Brutto FROM [pracownicy] AS p
+INNER JOIN [dzialy] AS d ON d.ID_dzialy=p.ID_dzialy
+INNER JOIN [zarobki] AS z ON z.ID_pracownicy=p.ID_pracownicy
+
+
+CREATE TABLE test_prac_2
+(
+	ID_pracownicy BIGINT NOT NULL,
+	imie VARCHAR(50) NULL,
+	nazwisko VARCHAR(50) NULL,
+	wiek INT NULL,
+	nazwa_dzialu VARCHAR(max) NOT NULL,
+	data DATETIME NOT NULL,
+	brutto MONEY NOT NULL
+);
+
+
+CREATE VIEW [vtest_prac]
+AS
+SELECT p.ID_pracownicy, p.imie, p.nazwisko, p.wiek, d.nazwa, z.data, z.brutto
+FROM [pracownicy] AS p
+INNER JOIN [dzialy] AS d ON d.ID_dzialy=p.ID_dzialy
+INNER JOIN [zarobki] AS z ON z.ID_pracownicy=p.ID_pracownicy
+WHERE p.wiek BETWEEN 25 AND 35;
+
+INSERT INTO [test_prac_2](ID_pracownicy, imie, nazwisko,  wiek,nazwa_dzialu, data, brutto)
+(SELECT * FROM [vtest_prac]);
+
+CREATE TABLE [orders2](
+orderID INT NOT NULL,
+customerID NCHAR(5) NULL,
+employeeID INT NULL,
+orderdate DATETIME NULL,
+requireddate DATETIME NULL,
+shippeddate DATETIME NULL,
+shipvia INT NULL,
+freight MONEY NULL DEFAULT (0),
+shipname NVARCHAR(max) NULL,
+shipaddress NVARCHAR(max) NULL,
+shipcity NVARCHAR(max) NULL,
+shipregion NVARCHAR(max) NULL,
+shippostalcode NVARCHAR(max) NULL,
+shipcountry NVARCHAR(max) NULL
+);
+
+
+INSERT INTO [orders2](orderID,customerID,employeeID,orderdate,
+requireddate,shippeddate,shipvia,freight,
+shipname, shipaddress, shipcity, shipregion,
+shippostalcode,shipcountry)
+(SELECT [OrderID],[CustomerID],[EmployeeID],[Orderdate],
+[Requireddate],[Shippeddate],[ShipVia],[Freight],
+[Shipname], [Shipaddress], [Shipcity], [Shipregion],
+[Shippostalcode],[Shipcountry]
+FROM [north_eng].[dbo].[Orders] W
+WHERE DATEPART(YEAR, [OrderDate])='1997');
+
 */
+
+UPDATE [test_prac_2] SET imie = (CASE
+WHEN lower(imie) like 'janusz' THEN 'ROBERT'
+WHEN lower(imie) like 'tomasz' THEN 'ADAM'
+ELSE imie 
+END ),
+nazwisko = (CASE
+WHEN lower(nazwisko) like 'pi¹tasa' THEN 'ROZMUS'
+WHEN lower(nazwisko) like'ziomek' THEN 'ADAMCZYK'
+ELSE nazwisko
+END);
+
+DELETE FROM [test_prac];
+TRUNCATE TABLE [test_prac];
