@@ -334,7 +334,6 @@ shippostalcode,shipcountry)
 FROM [north_eng].[dbo].[Orders] W
 WHERE DATEPART(YEAR, [OrderDate])='1997');
 
-*/
 
 UPDATE [test_prac_2] SET imie = (CASE
 WHEN lower(imie) like 'janusz' THEN 'ROBERT'
@@ -349,3 +348,93 @@ END);
 
 DELETE FROM [test_prac];
 TRUNCATE TABLE [test_prac];
+
+
+
+Create function dbo.test()
+returns int
+as 
+begin
+	return 10;
+end;
+
+
+select dbo.test();
+
+alter function dbo.test()
+returns varchar(max)
+as
+begin
+	return 'Witaj œwiecie!';
+end;
+
+select dbo.test();
+
+drop function dbo.test;
+
+create function dbo.netto(@brutto money)
+returns money
+as
+begin
+	declare @netto money;
+
+	set @netto=@brutto/1.23;
+
+	return @netto;
+end;
+
+select dbo.netto(Brutto) from zarobki;
+
+Create function dbo.vat(@brutto money, @netto money)
+returns money
+as
+begin
+	declare @vat money;
+
+	set @vat=@brutto-@netto
+
+	return @vat;
+end;
+
+Create function dbo.vat2(@brutto money, @netto money)
+returns money
+as
+begin
+	return(@brutto-@netto);
+end;
+
+select tab.*,dbo.vat(Brutto,tab.netto) as vat
+from (select *, dbo.netto(Brutto)as netto from zarobki) as tab;
+
+select tab.*,dbo.vat2(Brutto,tab.netto) as vat
+from (select *, dbo.netto(Brutto)as netto from zarobki) as tab;
+
+Create function dbo.vat3(@brutto money)
+returns money
+as 
+begin
+	declare @netto money;
+	set @netto = @brutto/1.23
+	--set @netto = (select dbo.netto(@brutto));
+	return(@brutto-@netto);
+end;
+
+select *, dbo.vat3(Brutto) as VAT from zarobki;
+
+select *, dbo.netto(Brutto) as netto, dbo.vat3(Brutto) as vat from zarobki;
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
