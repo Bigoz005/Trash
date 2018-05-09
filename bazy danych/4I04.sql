@@ -187,10 +187,340 @@ FROM [order details] tab
 INNER JOIN [products] p ON p.Productid=tab.Productid
 WHERE tab.UnitPrice IN (SELECT MIN(unitprice) FROM [Order Details]);
 
+
+
+
+
+
+										WIDOKI
+
+
+
+
+CREATE VIEW [vTest] 
+AS
+SELECT * FROM dzialy;
+
+
+
+ALTER VIEW [vTest]
+AS
+SELECT * FROM zarobki;
+
+SELECT * FROM vTest;
+
+DROP VIEW [Vtest]
+
+CREATE VIEW [vPracownicy] AS
+SELECT p.imie, p.nazwisko,p.wiek,p.plec, d.nazwa AS [dzialy]
+FROM [dzialy] AS d
+INNER JOIN [pracownicy] AS p ON p.ID_dzialy=d.ID_dzialy;
+
+
+SELECT * FROM [vPracownicy] ORDER BY [wiek];
+
+SELECT [dzialy], AVG(wiek) AS [ŒREDNIA] FROM [vPracownicy]
+GROUP BY [dzialy] ORDER BY [ŒREDNIA] DESC;
+
+
+ CREATE VIEW [vSred_Zarobki] AS
+ SELECT d.nazwa, AVG(z.brutto) AS srednie FROM pracownicy AS p
+ JOIN dzialy AS d ON p.ID_dzialy = d.ID_dzialy
+ JOIN zarobki AS z ON z.ID_pracownicy=p.ID_pracownicy
+ GROUP BY d.nazwa HAVING AVG(z.brutto) > 3000;
+
+ SELECT * FROM [vSred_Zarobki] ORDER BY [srednie];
+
+ 
+CREATE VIEW [vZlec_Sped] AS
+SELECT s.CompanyName, COUNT(o.OrderID) AS [Iloœæ zleceñ]
+FROM [Orders] AS o
+INNER JOIN [Shippers] AS s ON o.ShipVia=s.ShipperID
+GROUP BY s.CompanyName;
+
+SELECT CompanyName, [Iloœæ zleceñ] FROM [vZlec_Sped]
+WHERE [Iloœæ zleceñ] IN (SELECT MAX([Iloœæ zleceñ]) FROM [vZlec_Sped]);
 */
 
+/*stworzyc widok wyswietlajacy produkty i ich ceny jednostkowe, dla zaczynajacych sie od c do p,
+ oraz ceny z przedzialu od 10 do 100, bez 10 i 97 */
+ /*
+CREATE VIEW [vProdukty_Cena] AS 
+SELECT ProductName, UnitPrice 
+FROM Products
+WHERE productname LIKE '[C-P c-p]%'
+AND unitprice BETWEEN '10' AND '100'
+AND unitprice <>'10'
+AND unitprice <>'97';
+
+SELECT * FROM [vProdukty_Cena] ORDER BY [UnitPrice];
+
+
+INSERT INTO [dzialy](ID_dzialy, nazwa) VALUES(5,'MAGAZYN');
+
+INSERT INTO [dzialy](nazwa) VALUES('OCHRONA');
+
+INSERT INTO [dzialy](nazwa) VALUES('OCHRONA2'),('OCHRONA3'),('OCHRONA3')
+
+INSERT INTO [dzialy](nazwa)
+						(SELECT nazwa+'_BIS' FROM [dzialy] WHERE ID_dzialy IN(2,4));
+CREATE TABLE test_prac
+(
+	ID_pracownicy BIGINT NOT NULL,
+	imie VARCHAR(50) NULL,
+	nazwisko VARCHAR(50) NULL,
+	wiek INT NULL,
+	nazwa_dzialu VARCHAR(max) NOT NULL,
+	data DATETIME NOT NULL,
+	brutto MONEY NOT NULL
+);
+
+INSERT INTO [test_prac](ID_pracownicy, imie, nazwisko, wiek, nazwa_dzialu, data, brutto) VALUES(209405,'Micha³','Nawrot', 21,'magazyn',2018-04-11, 2550.00);
+INSERT INTO [test_prac](ID_pracownicy, imie, nazwisko, wiek, nazwa_dzialu, data, brutto)
+SELECT p.ID_pracownicy,p.Imie,p.Nazwisko,p.Wiek,d.Nazwa, z.Data, z.Brutto FROM [pracownicy] AS p
+INNER JOIN [dzialy] AS d ON d.ID_dzialy=p.ID_dzialy
+INNER JOIN [zarobki] AS z ON z.ID_pracownicy=p.ID_pracownicy
+
+
+CREATE TABLE test_prac_2
+(
+	ID_pracownicy BIGINT NOT NULL,
+	imie VARCHAR(50) NULL,
+	nazwisko VARCHAR(50) NULL,
+	wiek INT NULL,
+	nazwa_dzialu VARCHAR(max) NOT NULL,
+	data DATETIME NOT NULL,
+	brutto MONEY NOT NULL
+);
+
+
+CREATE VIEW [vtest_prac]
+AS
+SELECT p.ID_pracownicy, p.imie, p.nazwisko, p.wiek, d.nazwa, z.data, z.brutto
+FROM [pracownicy] AS p
+INNER JOIN [dzialy] AS d ON d.ID_dzialy=p.ID_dzialy
+INNER JOIN [zarobki] AS z ON z.ID_pracownicy=p.ID_pracownicy
+WHERE p.wiek BETWEEN 25 AND 35;
+
+INSERT INTO [test_prac_2](ID_pracownicy, imie, nazwisko,  wiek,nazwa_dzialu, data, brutto)
+(SELECT * FROM [vtest_prac]);
+
+CREATE TABLE [orders2](
+orderID INT NOT NULL,
+customerID NCHAR(5) NULL,
+employeeID INT NULL,
+orderdate DATETIME NULL,
+requireddate DATETIME NULL,
+shippeddate DATETIME NULL,
+shipvia INT NULL,
+freight MONEY NULL DEFAULT (0),
+shipname NVARCHAR(max) NULL,
+shipaddress NVARCHAR(max) NULL,
+shipcity NVARCHAR(max) NULL,
+shipregion NVARCHAR(max) NULL,
+shippostalcode NVARCHAR(max) NULL,
+shipcountry NVARCHAR(max) NULL
+);
+
+
+INSERT INTO [orders2](orderID,customerID,employeeID,orderdate,
+requireddate,shippeddate,shipvia,freight,
+shipname, shipaddress, shipcity, shipregion,
+shippostalcode,shipcountry)
+(SELECT [OrderID],[CustomerID],[EmployeeID],[Orderdate],
+[Requireddate],[Shippeddate],[ShipVia],[Freight],
+[Shipname], [Shipaddress], [Shipcity], [Shipregion],
+[Shippostalcode],[Shipcountry]
+FROM [north_eng].[dbo].[Orders] W
+WHERE DATEPART(YEAR, [OrderDate])='1997');
+
+
+UPDATE [test_prac_2] SET imie = (CASE
+WHEN lower(imie) like 'janusz' THEN 'ROBERT'
+WHEN lower(imie) like 'tomasz' THEN 'ADAM'
+ELSE imie 
+END ),
+nazwisko = (CASE
+WHEN lower(nazwisko) like 'pi¹tasa' THEN 'ROZMUS'
+WHEN lower(nazwisko) like'ziomek' THEN 'ADAMCZYK'
+ELSE nazwisko
+END);
+
+DELETE FROM [test_prac];
+TRUNCATE TABLE [test_prac];
 
 
 
+Create function dbo.test()
+returns int
+as 
+begin
+	return 10;
+end;
 
 
+select dbo.test();
+
+alter function dbo.test()
+returns varchar(max)
+as
+begin
+	return 'Witaj œwiecie!';
+end;
+
+select dbo.test();
+
+drop function dbo.test;
+
+create function dbo.netto(@brutto money)
+returns money
+as
+begin
+	declare @netto money;
+
+	set @netto=@brutto/1.23;
+
+	return @netto;
+end;
+
+select dbo.netto(Brutto) from zarobki;
+
+Create function dbo.vat(@brutto money, @netto money)
+returns money
+as
+begin
+	declare @vat money;
+
+	set @vat=@brutto-@netto
+
+	return @vat;
+end;
+
+Create function dbo.vat2(@brutto money, @netto money)
+returns money
+as
+begin
+	return(@brutto-@netto);
+end;
+
+select tab.*,dbo.vat(Brutto,tab.netto) as vat
+from (select *, dbo.netto(Brutto)as netto from zarobki) as tab;
+
+select tab.*,dbo.vat2(Brutto,tab.netto) as vat
+from (select *, dbo.netto(Brutto)as netto from zarobki) as tab;
+
+Create function dbo.vat3(@brutto money)
+returns money
+as 
+begin
+	declare @netto money;
+	set @netto = @brutto/1.23
+	--set @netto = (select dbo.netto(@brutto));
+	return(@brutto-@netto);
+end;
+
+select *, dbo.vat3(Brutto) as VAT from zarobki;
+
+select *, dbo.netto(Brutto) as netto, dbo.vat3(Brutto) as vat from zarobki;
+
+
+Create function dbo.Wynik()
+returns Table
+as
+	return(Select *, dbo.netto(brutto), dbo.vat2(brutto) FROM zarobki);
+
+
+select * from dbo.Wynik();
+
+
+
+Create function dbo.Wiek(@wiek int)
+Returns varcahr(max)
+as
+begin
+	Declare @wynik varchar(max);
+
+	if @wiek < 25
+		begin
+			set @wynik = 'Mlody'
+		end
+	if @wiek >= 25 AND @wiek <=65
+	begin
+		set @wynik='Sredni'
+	end
+
+	if @wiek > 65
+		begin
+			set @wynik = 'Stary'
+		end
+	else
+		begin	
+			set @wynik='nieznany'
+		end
+
+end;
+
+
+select imie,nazwisko,wiek,dbo.wiek(wiek) as 'Jaki wiek?' from pracownicy;
+
+
+CREATE FUNCTION dbo.potega(@liczba float)
+RETURNS float
+AS
+BEGIN
+	DECLARE @wynik float;
+
+	SET @wynik=POWER(@liczba, 2);
+
+	RETURN @wynik;
+END;
+
+SELECT dbo.potega(5);
+
+CREATE FUNCTION dbo.Pola(@figura varchar(20), @bok1 float, @bok2 float =0)
+RETURNS float
+AS 
+BEGIN
+	DECLARE @wynik float;
+	if Upper(@figura)='Trojk¹t'
+	BEGIN
+		SET @wynik=@bok1*@bok2/2;
+	END
+	if Upper(@figura)='Kwadrat'
+	BEGIN
+		SET @wynik=dbo.potega(@bok1);
+	END;
+	if Upper(@figura)='Prostokat'
+	BEGIN
+		SET @wynik=@bok1*@bok2;
+	END;
+	if Upper(@figura)='Trapez'
+	BEGIN
+		SET @wynik=(@bok1+@bok2)/2;
+	END;
+	if Upper(@figura)='Ko³o'
+	BEGIN
+		SET @wynik=PI()*@bok1*@bok2;
+	END;
+	if Upper(@figura)='Równoleg³obok'
+	BEGIN
+		SET @wynik=@bok1*@bok2;
+	END;
+	RETURN @wynik;
+END;
+
+
+USE [Northwind]
+*/
+CREATE FUNCTION dbo.North_5_TOP(@rok int)
+RETURNS TABLE
+AS
+RETURN(SELECT TOP 5 SUM(od.Quantity) AS [Iloœæ_zamówieñ], p.ProductName AS [Produkt],s.CompanyName AS [Dostawca]
+	FROM [Northwind].[dbo].[Order Details] AS od
+	INNER JOIN [Northwind].[dbo].Products AS p ON od.ProductID =p.ProductID
+	INNER JOIN [Northwind].[dbo].Orders AS o ON o.OrderID = od.OrderID
+	INNER JOIN [Northwind].[dbo].Suppliers AS s ON s.SupplierID=p.SupplierID
+GROUP BY od.ProductID, p.ProductName, s.CompanyName ORDER BY 1 DESC
+);
+
+SELECT * FROM dbo.North_5_TOP(1998);
