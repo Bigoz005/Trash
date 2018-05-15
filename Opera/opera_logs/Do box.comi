@@ -1,0 +1,13 @@
+$ DO INDEX=#g START=1 FINISH=4 INCREMENT=1
+$DIALOG ACTION=start TITLE='Rysowanie box'
+$displayline text='Wspolrzedne box0'
+$ask #a 'podaj X0:'
+$ask #b 'podaj Y0:'
+$ask #c 'podaj Z0:'
+$displayline text='Wspolrzedne box1'
+$ask #a1 'podaj X1:'
+$ask #b1 'podaj Y1:'
+$ask #c1 'podaj Z1:'
+$DIALOG ACTION=stop
+BLOCK NAME='pudelko' X0=#a Y0=#b Z0=#c X1=#a1 Y1=#b1 Z1=#c1
+END DO

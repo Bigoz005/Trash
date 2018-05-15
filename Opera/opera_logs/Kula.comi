@@ -1,0 +1,10 @@
+$DIALOG ACTION=start TITLE='Rysowanie kuli'
+$displayline text='Wspolrzedne srodka kuli'
+$ask #a 'podaj X0:'
+$ask #b 'podaj Y0:'
+$ask #c 'podaj Z0:'
+$displayline text='Promien kuli'
+$ask #r 'podaj R:'
+$DIALOG ACTION=stop
+
+SPHERE NAME='kula' X0=#a Y0=#b Z0=#c RADIUS=#r
