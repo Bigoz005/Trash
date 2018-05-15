@@ -1,0 +1,8 @@
+$DIALOG ACTION=start TITLE='suma dwoch liczb'
+$ask #a 'podaj a:'
+$ask #b 'podaj b:'
+$DIALOG ACTION=stop
+$parameter #suma #a+#b
+$DIALOG ACTION=start TITLE='Dodawanie'
+$displayline text='Suma dwoch liczb: %real(#a) + %real(#b) = %real(#suma)'
+$DIALOG ACTION=stop
