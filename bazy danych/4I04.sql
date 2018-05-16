@@ -511,7 +511,7 @@ END;
 
 
 USE [Northwind]
-*/
+
 CREATE FUNCTION dbo.North_5_TOP(@rok int)
 RETURNS TABLE
 AS
@@ -524,3 +524,108 @@ GROUP BY od.ProductID, p.ProductName, s.CompanyName ORDER BY 1 DESC
 );
 
 SELECT * FROM dbo.North_5_TOP(1998);
+
+
+CREATE FUNCTION dbo.Add_Reverser(@tekst1 varchar(100), @tekst2 varchar(100))
+RETURNS varchar(200)
+AS
+BEGIN
+DECLARE @wynik varchar(200);
+DECLARE @indexy INT;
+DECLARE @char_1 varchar(200);
+DECLARE @char_2 varchar(200);
+	IF DATALENGTH(@tekst1) != DATALENGTH(@tekst2)
+		SET @wynik = 'ZLE';
+	ELSE
+	BEGIN
+		SET @indexy = DATALENGTH(@tekst1)
+		WHILE @indexy >= 0
+			BEGIN
+				SET @char_1 = SUBSTRING(@tekst1,@indexy,1)
+				SET @char_2 = SUBSTRING(@tekst2,@indexy,1)
+				SET @indexy=@indexy-1
+				SET @wynik=CONCAT(@wynik,@char_2,@char_1)
+			END
+	END
+	RETURN @wynik
+END;
+
+
+SELECT dbo.Add_Reverser('abcd', 'efgh');
+
+
+CREATE PROCEDURE test
+as
+begin 
+select * from pracownicy
+end;
+
+
+exec test;
+
+Alter procedure test(@imie varchar (max)= '%', @nazwisko varchar(max))
+as
+begin
+select * from pracownicy where imie like @imie and nazwisko like @nazwisko
+end;
+
+exec test 'j%', '%p';
+exec test @nazwisko='j%';
+
+Alter procedure test
+as
+begin
+	Declare @zmienna varchar(100);
+	set @zmienna = 'Zmienna';
+	print @zmienna;
+
+	select @zmienna = nazwa from dzialy where nazwa like 'M%' order by nazwa;
+	print @zmienna;
+end;
+
+exec test;
+
+alter procedure test(@Bok int, @Wynik int OUTPUT)
+as 
+begin
+	SET @Wynik = POWER(@Bok, 2);
+end;
+
+
+declare @Pole int;
+exec test 5, @Pole OUTPUT;
+PRINT 'Pole powierzchni kwadratu wynosi: ' +CONVERT(varchar, @Pole);
+*/
+
+create procedure test(@Data datetime= NULL)
+as 
+begin
+IF @Data IS NULL
+BEGIN 
+	SET @Data= GetDate();
+END
+	PRINT 'Data :' +
+	CASE DATEPART(dw, @Data)
+	WHEN 1 THEN 'Niedziela'
+	WHEN 2 THEN 'Poniedzialek'
+	WHEN 3 THEN 'Wtorek'
+	WHEN 4 THEN 'Sroda'
+	WHEN 5 THEN 'Czwartek'
+	WHEN 6 THEN 'Piatek'
+	WHEN 7 THEN 'Sobota'
+	END
+	+ ', ' + CONVERT(varchar, DAY(@Data))+' '+ DATENAME(month, @Data) + ' ' +CONVERT(varchar, YEAR(@Data));
+END;
+
+exec test
+
+--declare @Pole int;
+--exec test 5, @Pole OUTPUT;
+--PRINT 'Pole powierzchni kwadratu wynosi: ' +CONVERT(varchar, @Pole);
+
+drop procedure test
+
+/*
+wynik procedury
+EXEC Adress_Split 'Piotrkowska 123/23 m.30 90-123 £Ûdü'
+Adres wejúciowy: PIotrkowska 123/23 m.30 90-123 £Ûdü
