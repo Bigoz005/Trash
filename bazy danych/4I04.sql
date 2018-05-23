@@ -625,7 +625,200 @@ exec test
 
 drop procedure test
 
+
 /*
-wynik procedury
+create procedure Adress_Split(@adres varchar(max))
+AS
+BEGIN
+	DECLARE @pozycja integer;
+	
+	PRINT 'Adres wejœciowy: ' + @adres;
+
+	PRINT 'Adres wyjœciowy: ';
+
+	SET @pozycja = CHARINDEX(' ', @adres)
+	PRINT SUBSTRING(@adres, 0, @pozycja+1)
+
+	WHILE(LEN(@adres)>2)
+	BEGIN
+	SET @adres = SUBSTRING(@adres, @pozycja + 1, LEN(@adres))
+	SET @pozycja = CHARINDEX(' ', @adres)
+	
+		IF @pozycja = 0
+			SET @pozycja = LEN(@adres) + 1;
+
+		PRINT SUBSTRING(@adres, 0, @pozycja + 1)
+	END	
+END
+
+
+
 EXEC Adress_Split 'Piotrkowska 123/23 m.30 90-123 £ódŸ'
-Adres wejœciowy: PIotrkowska 123/23 m.30 90-123 £ódŸ
+*/
+/*
+CREATE PROCEDURE blad
+AS
+BEGIN
+	BEGIN TRY
+		SELECT 1/0 AS [Dzielenie]
+	END TRY
+	BEGIN CATCH
+		SELECT ERROR_NUMBER() AS [Numer b³êdu]
+			  ,ERROR_SEVERITY() AS [istotnoœæ b³êdu]
+			  ,ERROR_STATE() AS [Stan b³êdu]
+			  ,ERROR_PROCEDURE() AS [B³¹d procedury]
+			  ,ERROR_LINE() AS [Linia B³êdu]
+			  ,ERROR_MESSAGE() AS [Wiadomoœæ b³êdu]
+	END CATCH;
+END;
+
+EXEC blad;
+
+*/
+
+
+CREATE PROCEDURE CREATE_DB(@nazwa_db varchar(max))
+AS
+BEGIN
+	BEGIN TRY
+		EXEC('CREATE DATABASE [' + @nazwa_db + ']');
+	END TRY
+	BEGIN CATCH
+		SELECT ERROR_NUMBER() AS [Numer b³êdu]
+			  ,ERROR_SEVERITY() AS [istotnoœæ b³êdu]
+			  ,ERROR_STATE() AS [Stan b³êdu]
+			  ,ERROR_PROCEDURE() AS [B³¹d procedury]
+			  ,ERROR_LINE() AS [Linia B³êdu]
+			  ,ERROR_MESSAGE() AS [Wiadomoœæ b³êdu]
+	END CATCH;
+END;
+
+
+CREATE PROCEDURE CREATE_TABLES(@nazwa_db varchar(max))
+AS
+BEGIN
+	BEGIN TRY
+		EXEC ('CREATE TABLE [' + @nazwa_db + '].[dbo].[produkty]
+		(
+			ID_produktu BIGINT NOT NULL IDENTITY(1,1),
+			nazwa VARCHAR(max) NOT NULL,
+			opis VARCHAR(max) NOT NULL,
+			ilosc_w_magazynie INT NOT NULL,
+			cena_netto MONEY NOT NULL,
+			stawka_vat INT NOT NULL,
+			CONSTRAINT [PK_ID_produktu] PRIMARY KEY(ID_produktu)
+			)');
+		EXEC ('CREATE TABLE [' + @nazwa_db + '].[dbo].[klienci]
+		(
+			ID_klienta BIGINT NOT NULL IDENTITY(1,1),
+			imie VARCHAR(10) NOT NULL,
+			nazwisko VARCHAR(40) NOT NULL,
+			plec VARCHAR(1) NOT NULL,
+			data_urodzenia DATE NOT NULL,
+			adres VARCHAR(max) NOT NULL,
+			miasto VARCHAR(50) NOT NULL,
+			kod_pocztowy VARCHAR(6) NOT NULL,
+			email VARCHAR(max) NOT NULL,
+			telefon INT NULL,
+			CONSTRAINT [PK_ID_klienta] PRIMARY KEY(ID_klienta),
+			CONSTRAINT [CHK_plec] CHECK(UPPER(plec) = ''K''
+			OR UPPER(plec) = ''M'')
+			)');
+		EXEC ('CREATE TABLE [' + @nazwa_db + '].[dbo].[zamowienia]
+		(
+			ID_zamowienia BIGINT NOT NULL IDENTITY(1,1),
+			ID_klienta BIGINT NOT NULL,
+			numer_zamowienia INT NULL CONSTRAINT [DF_numer_zamowienia] DEFAULT(0),
+			data_zamowienia DATETIME NOT NULL,
+			data_realizacji DATETIME NULL,
+			suma_wartosci_netto MONEY NULL,
+			suma_wartosci_brutto MONEY NULL,
+			suma_wartosci_vat MONEY NULL,
+			CONSTRAINT [PK_ID_zamowienia] PRIMARY KEY(ID_zamowienia),
+			CONSTRAINT [FK_ID_klienta] FOREIGN KEY(ID_klienta) REFERENCES [klienci](ID_klienta)
+			)');
+		EXEC ('CREATE TABLE [' + @nazwa_db + '].[dbo].[dane]
+		(
+			ID_danych BIGINT NOT NULL IDENTITY(1,1),
+			ID_zamowienia BIGINT NOT NULL,
+			imie VARCHAR(10) NOT NULL,
+			nazwisko VARCHAR(40) NOT NULL,
+			adres VARCHAR(max) NOT NULL,
+			miasto VARCHAR(50) NOT NULL,
+			kod_pocztowy VARCHAR(6) NOT NULL,
+			CONSTRAINT [PK_ID_danych] PRIMARY KEY(ID_danych),
+			CONSTRAINT [FK_ID_zamowienia_1] FOREIGN KEY(ID_zamowienia) REFERENCES [zamowienia](ID_zamowienia)
+			)');
+		EXEC ('CREATE TABLE [' + @nazwa_db + '].[dbo].[zamowienia_pozycje]
+		(
+			ID_zamowienia_pozycji BIGINT NOT NULL IDENTITY(1,1),
+			ID_zamowienia BIGINT NOT NULL,
+			ID_produktu BIGINT NOT NULL,
+			nazwa VARCHAR(max) NOT NULL,
+			opis VARCHAR(max) NOT NULL,
+			ilosc_sztuk INT NOT NULL,
+			cena_netto MONEY NOT NULL,
+			stawka_vat INT NOT NULL,
+			wartosc_netto MONEY NULL,
+			wartosc_brutto MONEY NULL,
+			wartosc_vat MONEY NULL,
+			uwagi VARCHAR(max) NULL,
+			CONSTRAINT [PK_ID_zamowienia_pozycji] PRIMARY KEY(ID_zamowienia_pozycji),
+			CONSTRAINT [FK_ID_zamowienia_2] FOREIGN KEY(ID_zamowienia) REFERENCES [zamowienia](ID_zamowienia),
+			CONSTRAINT [FK_ID_produktu] FOREIGN KEY(ID_produktu) REFERENCES [produkty](ID_produktu)
+			)');
+
+	END TRY
+	BEGIN CATCH
+		SELECT ERROR_NUMBER() AS [Numer b³êdu]
+			  ,ERROR_SEVERITY() AS [istotnoœæ b³êdu]
+			  ,ERROR_STATE() AS [Stan b³êdu]
+			  ,ERROR_PROCEDURE() AS [B³¹d procedury]
+			  ,ERROR_LINE() AS [Linia B³êdu]
+			  ,ERROR_MESSAGE() AS [Wiadomoœæ b³êdu]
+	END CATCH;
+END;
+
+CREATE PROCEDURE CREATE_NEW_CLIENT(@nazwa_db varchar(max))
+AS
+BEGIN
+	BEGIN TRY
+		EXEC CREATE_DB @nazwa_db;
+
+		EXEC CREATE_TABLES @nazwa_db;
+END TRY
+	BEGIN CATCH
+		SELECT ERROR_NUMBER() AS [Numer b³êdu]
+			  ,ERROR_SEVERITY() AS [istotnoœæ b³êdu]
+			  ,ERROR_STATE() AS [Stan b³êdu]
+			  ,ERROR_PROCEDURE() AS [B³¹d procedury]
+			  ,ERROR_LINE() AS [Linia B³êdu]
+			  ,ERROR_MESSAGE() AS [Wiadomoœæ b³êdu]
+	END CATCH;
+END;
+
+--DROP DATABASE sr_12_14_test
+EXEC CREATE_NEW_CLIENT 'sr_12_14_test'
+
+--DROP PROCEDURE CREATE_NEW_CLIENT;
+--EXEC CREATE_DB baza;
+
+CREATE FUNCTION TRIM(@tekst varchar(max))
+RETURNS VARCHAR(max)
+AS
+BEGIN
+	RETURN LTRIM(RTRIM(@tekst));
+END;
+
+SELECT dbo.Trim(' xyz ');
+
+CREATE FUNCTION dbo.InitCap(@tekst varchar(max))
+RETURNS VARCHAR(max)
+AS
+BEGIN
+	RETURN UPPER(SUBSTRING(dbo.Trim(@tekst), 1, 1)) +
+	LOWER(SUBSTRING(dbo.Trim(@tekst), 2, LEN(dbo.Trim(@tekst))));
+END;
+
+SELECT dbo.InitCap('TEST');
+SELECT dbo.InitCap('test ');
