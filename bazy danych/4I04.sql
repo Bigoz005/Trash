@@ -1,4 +1,4 @@
-					--komentarz liniowy
+Ôªø					--komentarz liniowy
 					/*komentarz blokowy*/
 
 /*
@@ -173,9 +173,9 @@ SELECT DATEADD(YEAR, 1, GETDATE());
 
 SELECT DATEADD(MONTH, 2, GETDATE());
 
-SELECT CONCAT('TO', 'JEST', 'TEKST', 'Z£•CZONY');
+SELECT CONCAT('TO', 'JEST', 'TEKST', 'Z≈ÅƒÑCZONY');
 
-SELECT CONCAT('TO', ' ', 'JEST', ' ', 'TEKST', ' ', 'Z£•CZONY', ' ', 'ZE', ' ', 'SPACJAMI');
+SELECT CONCAT('TO', ' ', 'JEST', ' ', 'TEKST', ' ', 'Z≈ÅƒÑCZONY', ' ', 'ZE', ' ', 'SPACJAMI');
 
 SELECT CONVERT(int, 199.99);
 
@@ -219,8 +219,8 @@ INNER JOIN [pracownicy] AS p ON p.ID_dzialy=d.ID_dzialy;
 
 SELECT * FROM [vPracownicy] ORDER BY [wiek];
 
-SELECT [dzialy], AVG(wiek) AS [åREDNIA] FROM [vPracownicy]
-GROUP BY [dzialy] ORDER BY [åREDNIA] DESC;
+SELECT [dzialy], AVG(wiek) AS [≈öREDNIA] FROM [vPracownicy]
+GROUP BY [dzialy] ORDER BY [≈öREDNIA] DESC;
 
 
  CREATE VIEW [vSred_Zarobki] AS
@@ -233,13 +233,13 @@ GROUP BY [dzialy] ORDER BY [åREDNIA] DESC;
 
  
 CREATE VIEW [vZlec_Sped] AS
-SELECT s.CompanyName, COUNT(o.OrderID) AS [IloúÊ zleceÒ]
+SELECT s.CompanyName, COUNT(o.OrderID) AS [Ilo≈õƒá zlece≈Ñ]
 FROM [Orders] AS o
 INNER JOIN [Shippers] AS s ON o.ShipVia=s.ShipperID
 GROUP BY s.CompanyName;
 
-SELECT CompanyName, [IloúÊ zleceÒ] FROM [vZlec_Sped]
-WHERE [IloúÊ zleceÒ] IN (SELECT MAX([IloúÊ zleceÒ]) FROM [vZlec_Sped]);
+SELECT CompanyName, [Ilo≈õƒá zlece≈Ñ] FROM [vZlec_Sped]
+WHERE [Ilo≈õƒá zlece≈Ñ] IN (SELECT MAX([Ilo≈õƒá zlece≈Ñ]) FROM [vZlec_Sped]);
 */
 
 /*stworzyc widok wyswietlajacy produkty i ich ceny jednostkowe, dla zaczynajacych sie od c do p,
@@ -275,7 +275,7 @@ CREATE TABLE test_prac
 	brutto MONEY NOT NULL
 );
 
-INSERT INTO [test_prac](ID_pracownicy, imie, nazwisko, wiek, nazwa_dzialu, data, brutto) VALUES(209405,'Micha≥','Nawrot', 21,'magazyn',2018-04-11, 2550.00);
+INSERT INTO [test_prac](ID_pracownicy, imie, nazwisko, wiek, nazwa_dzialu, data, brutto) VALUES(209405,'Micha≈Ç','Nawrot', 21,'magazyn',2018-04-11, 2550.00);
 INSERT INTO [test_prac](ID_pracownicy, imie, nazwisko, wiek, nazwa_dzialu, data, brutto)
 SELECT p.ID_pracownicy,p.Imie,p.Nazwisko,p.Wiek,d.Nazwa, z.Data, z.Brutto FROM [pracownicy] AS p
 INNER JOIN [dzialy] AS d ON d.ID_dzialy=p.ID_dzialy
@@ -341,7 +341,7 @@ WHEN lower(imie) like 'tomasz' THEN 'ADAM'
 ELSE imie 
 END ),
 nazwisko = (CASE
-WHEN lower(nazwisko) like 'piπtasa' THEN 'ROZMUS'
+WHEN lower(nazwisko) like 'piƒÖtasa' THEN 'ROZMUS'
 WHEN lower(nazwisko) like'ziomek' THEN 'ADAMCZYK'
 ELSE nazwisko
 END);
@@ -365,7 +365,7 @@ alter function dbo.test()
 returns varchar(max)
 as
 begin
-	return 'Witaj úwiecie!';
+	return 'Witaj ≈õwiecie!';
 end;
 
 select dbo.test();
@@ -482,7 +482,7 @@ RETURNS float
 AS 
 BEGIN
 	DECLARE @wynik float;
-	if Upper(@figura)='Trojkπt'
+	if Upper(@figura)='TrojkƒÖt'
 	BEGIN
 		SET @wynik=@bok1*@bok2/2;
 	END
@@ -498,11 +498,11 @@ BEGIN
 	BEGIN
 		SET @wynik=(@bok1+@bok2)/2;
 	END;
-	if Upper(@figura)='Ko≥o'
+	if Upper(@figura)='Ko≈Ço'
 	BEGIN
 		SET @wynik=PI()*@bok1*@bok2;
 	END;
-	if Upper(@figura)='RÛwnoleg≥obok'
+	if Upper(@figura)='R√≥wnoleg≈Çobok'
 	BEGIN
 		SET @wynik=@bok1*@bok2;
 	END;
@@ -515,7 +515,7 @@ USE [Northwind]
 CREATE FUNCTION dbo.North_5_TOP(@rok int)
 RETURNS TABLE
 AS
-RETURN(SELECT TOP 5 SUM(od.Quantity) AS [IloúÊ_zamÛwieÒ], p.ProductName AS [Produkt],s.CompanyName AS [Dostawca]
+RETURN(SELECT TOP 5 SUM(od.Quantity) AS [Ilo≈õƒá_zam√≥wie≈Ñ], p.ProductName AS [Produkt],s.CompanyName AS [Dostawca]
 	FROM [Northwind].[dbo].[Order Details] AS od
 	INNER JOIN [Northwind].[dbo].Products AS p ON od.ProductID =p.ProductID
 	INNER JOIN [Northwind].[dbo].Orders AS o ON o.OrderID = od.OrderID
@@ -596,7 +596,7 @@ declare @Pole int;
 exec test 5, @Pole OUTPUT;
 PRINT 'Pole powierzchni kwadratu wynosi: ' +CONVERT(varchar, @Pole);
 */
-
+/*
 create procedure test(@Data datetime= NULL)
 as 
 begin
@@ -625,16 +625,16 @@ exec test
 
 drop procedure test
 
-
+*/
 /*
 create procedure Adress_Split(@adres varchar(max))
 AS
 BEGIN
 	DECLARE @pozycja integer;
 	
-	PRINT 'Adres wejúciowy: ' + @adres;
+	PRINT 'Adres wej≈õciowy: ' + @adres;
 
-	PRINT 'Adres wyjúciowy: ';
+	PRINT 'Adres wyj≈õciowy: ';
 
 	SET @pozycja = CHARINDEX(' ', @adres)
 	PRINT SUBSTRING(@adres, 0, @pozycja+1)
@@ -653,7 +653,7 @@ END
 
 
 
-EXEC Adress_Split 'Piotrkowska 123/23 m.30 90-123 £Ûdü'
+EXEC Adress_Split 'Piotrkowska 123/23 m.30 90-123 ≈Å√≥d≈∫'
 */
 /*
 CREATE PROCEDURE blad
@@ -663,19 +663,19 @@ BEGIN
 		SELECT 1/0 AS [Dzielenie]
 	END TRY
 	BEGIN CATCH
-		SELECT ERROR_NUMBER() AS [Numer b≥Ídu]
-			  ,ERROR_SEVERITY() AS [istotnoúÊ b≥Ídu]
-			  ,ERROR_STATE() AS [Stan b≥Ídu]
-			  ,ERROR_PROCEDURE() AS [B≥πd procedury]
-			  ,ERROR_LINE() AS [Linia B≥Ídu]
-			  ,ERROR_MESSAGE() AS [WiadomoúÊ b≥Ídu]
+		SELECT ERROR_NUMBER() AS [Numer b≈Çƒôdu]
+			  ,ERROR_SEVERITY() AS [istotno≈õƒá b≈Çƒôdu]
+			  ,ERROR_STATE() AS [Stan b≈Çƒôdu]
+			  ,ERROR_PROCEDURE() AS [B≈ÇƒÖd procedury]
+			  ,ERROR_LINE() AS [Linia B≈Çƒôdu]
+			  ,ERROR_MESSAGE() AS [Wiadomo≈õƒá b≈Çƒôdu]
 	END CATCH;
 END;
 
 EXEC blad;
 
 */
-
+/*
 
 CREATE PROCEDURE CREATE_DB(@nazwa_db varchar(max))
 AS
@@ -684,12 +684,12 @@ BEGIN
 		EXEC('CREATE DATABASE [' + @nazwa_db + ']');
 	END TRY
 	BEGIN CATCH
-		SELECT ERROR_NUMBER() AS [Numer b≥Ídu]
-			  ,ERROR_SEVERITY() AS [istotnoúÊ b≥Ídu]
-			  ,ERROR_STATE() AS [Stan b≥Ídu]
-			  ,ERROR_PROCEDURE() AS [B≥πd procedury]
-			  ,ERROR_LINE() AS [Linia B≥Ídu]
-			  ,ERROR_MESSAGE() AS [WiadomoúÊ b≥Ídu]
+		SELECT ERROR_NUMBER() AS [Numer b≈Çƒôdu]
+			  ,ERROR_SEVERITY() AS [istotno≈õƒá b≈Çƒôdu]
+			  ,ERROR_STATE() AS [Stan b≈Çƒôdu]
+			  ,ERROR_PROCEDURE() AS [B≈ÇƒÖd procedury]
+			  ,ERROR_LINE() AS [Linia B≈Çƒôdu]
+			  ,ERROR_MESSAGE() AS [Wiadomo≈õƒá b≈Çƒôdu]
 	END CATCH;
 END;
 
@@ -770,12 +770,12 @@ BEGIN
 
 	END TRY
 	BEGIN CATCH
-		SELECT ERROR_NUMBER() AS [Numer b≥Ídu]
-			  ,ERROR_SEVERITY() AS [istotnoúÊ b≥Ídu]
-			  ,ERROR_STATE() AS [Stan b≥Ídu]
-			  ,ERROR_PROCEDURE() AS [B≥πd procedury]
-			  ,ERROR_LINE() AS [Linia B≥Ídu]
-			  ,ERROR_MESSAGE() AS [WiadomoúÊ b≥Ídu]
+		SELECT ERROR_NUMBER() AS [Numer b≈Çƒôdu]
+			  ,ERROR_SEVERITY() AS [istotno≈õƒá b≈Çƒôdu]
+			  ,ERROR_STATE() AS [Stan b≈Çƒôdu]
+			  ,ERROR_PROCEDURE() AS [B≈ÇƒÖd procedury]
+			  ,ERROR_LINE() AS [Linia B≈Çƒôdu]
+			  ,ERROR_MESSAGE() AS [Wiadomo≈õƒá b≈Çƒôdu]
 	END CATCH;
 END;
 
@@ -788,12 +788,12 @@ BEGIN
 		EXEC CREATE_TABLES @nazwa_db;
 END TRY
 	BEGIN CATCH
-		SELECT ERROR_NUMBER() AS [Numer b≥Ídu]
-			  ,ERROR_SEVERITY() AS [istotnoúÊ b≥Ídu]
-			  ,ERROR_STATE() AS [Stan b≥Ídu]
-			  ,ERROR_PROCEDURE() AS [B≥πd procedury]
-			  ,ERROR_LINE() AS [Linia B≥Ídu]
-			  ,ERROR_MESSAGE() AS [WiadomoúÊ b≥Ídu]
+		SELECT ERROR_NUMBER() AS [Numer b≈Çƒôdu]
+			  ,ERROR_SEVERITY() AS [istotno≈õƒá b≈Çƒôdu]
+			  ,ERROR_STATE() AS [Stan b≈Çƒôdu]
+			  ,ERROR_PROCEDURE() AS [B≈ÇƒÖd procedury]
+			  ,ERROR_LINE() AS [Linia B≈Çƒôdu]
+			  ,ERROR_MESSAGE() AS [Wiadomo≈õƒá b≈Çƒôdu]
 	END CATCH;
 END;
 
@@ -822,3 +822,211 @@ END;
 
 SELECT dbo.InitCap('TEST');
 SELECT dbo.InitCap('test ');
+
+
+ CREATE TRIGGER test
+ ON dzialy
+ AFTER insert
+ as
+ begin
+	select * from dzialy;
+ end;
+
+ insert into dzialy(nazwa) values('test');
+
+ alter trigger test
+ on dzialy
+ after insert,update,delete
+ as 
+ begin
+	select * from inserted;
+	select * from deleted;
+ end;
+  */
+ /* 
+ UPDATE dzialy SET nazwa = 'xxx' WHERE ID_dzialy = 1;
+ 
+ DELETE FROM dzialy WHERE ID_dzialy = 1;
+ */
+ /*
+ alter trigger test
+ on dzialy
+ after insert,update,delete
+ as 
+ begin
+	if not exists(select * from deleted)
+	and exists(select * from inserted)
+	begin
+		print 'insert'
+	end
+else if exists(Select * From deleted)
+	and not exists(select * from inserted)
+	begin
+		print 'delete';
+	end
+else if exists(select * from deleted)
+	and exists(select * from inserted)
+	begin
+		print 'UPDATE';
+	end
+end;
+
+DROP trigger test;
+ALTER TABLE pracownicy ADD iloscZarobkow INT NULL;
+
+*/
+/*
+create trigger licznik
+on zarobki
+ after insert,update
+ as 
+  DECLARE @ID BIGINT;
+  SET @ID =(SELECT ID_pracownicy FROM inserted);
+ begin
+	if @ID is NOT NULL
+	begin
+		Select count(brutto) AS 'iloscZarobkow', ID_pracownicy
+		FROM zarobki GROUP BY ID_pracownicy;
+	end
+end;
+*/
+/*
+alter trigger licznik
+on zarobki
+ after insert,update
+ as 
+  DECLARE @ID BIGINT, @ilosc INT;
+  SET @ID =(SELECT ID_pracownicy FROM inserted);
+ begin
+	if @ID is NOT NULL
+	begin
+		SET @ilosc = (SELECT count(brutto) FROM zarobki
+		WHERE ID_pracownicy = @ID GROUP BY ID_pracownicy);
+
+		UPDATE pracownicy SET iloscZarobkow = @ilosc
+		WHERE ID_Pracownicy = @ID;
+		end
+end;
+
+INSERT INTO zarobki(data,brutto,ID_pracownicy) VALUES(GETDATE(),10000,1);
+
+create trigger licznik2
+on zarobki
+ after insert
+ as 
+  DECLARE @ID BIGINT;
+  SET @ID =(SELECT ID_pracownicy FROM inserted);
+ begin
+	if @ID is NOT NULL
+	begin
+		INSERT INTO zarpblo(data, brutto, ID_pracownicy)
+		SELECT data,brutto,ID_pracownicy FROM inserted
+		
+		UPDATE pracownicy SET iloscZarobkow = dbo.ilosc(@ID)
+		WHERE ID_Pracownicy = @ID;
+		end
+end;
+
+ */
+/*
+alter trigger licznik
+on zarobki
+ Instead of insert
+ as 
+  DECLARE @ID BIGINT;
+  SET @ID =(SELECT ID_pracownicy FROM inserted);
+ begin
+	if @ID is NOT NULL
+	begin
+		INSERT INTO zarpblo(data, brutto, ID_pracownicy)
+		SELECT data,brutto,ID_pracownicy FROM inserted
+		
+		UPDATE pracownicy SET iloscZarobkow = dbo.ilosc(@ID)
+		WHERE ID_Pracownicy = @ID;
+		end
+end;
+*/
+
+CREATE TABLE [zarobki_audyt](
+	ID_audyt BIGINT NOT NULL IDENTITY(1,1),
+	ID_zarobki BIGINT NOT NULL,
+	data DATETIME NOT NULL,
+	brutto MONEY NULL,
+	ID_pracownicy BIGINT NOT NULL,
+	operacja VARCHAR(max) NOT NULL,
+	data_operacji DATETIME NOT NULL,
+	CONSTRAINT [PK_ID_audyt] PRIMARY KEY (ID_audyt),
+	CONSTRAINT [CHK_operacja] CHECK(UPPER(operacja) = 'INSERT' OR UPPER(operacja) = 'UPDATE' OR UPPER(operacja) = 'DELETE')
+	);
+
+CREATE TRIGGER audyt
+ON [zarobki]
+AFTER INSERT, UPDATE, DELETE
+AS
+begin
+	if NOT EXISTS(SELECT * FROM deleted)
+		AND EXISTS(SELECT * FROM inserted)
+		BEGIN
+			INSERT INTO [zarobki_audyt](ID_zarobki, data, brutto, ID_pracownicy,operacja,data_operacji)(SELECT ID_zarobki, data, brutto, ID_pracownicy, 'INSERT', GETDATE() FROM [inserted]);
+		END
+	ELSE IF EXISTS(SELECT * FROM deleted)
+		AND NOT EXISTS(SELECT * FROM inserted)
+		BEGIN
+			INSERT INTO [zarobki_audyt](ID_zarobki, data, brutto, ID_pracownicy,operacja,data_operacji)(SELECT ID_zarobki, data, brutto, ID_pracownicy, 'DELETED', GETDATE() FROM [deleted]);
+		END
+	ELSE IF EXISTS(SELECT * FROM deleted)
+			AND EXISTS(SELECT * FROM inserted)
+		BEGIN
+			INSERT INTO [zarobki_audyt](ID_zarobki, data, brutto, ID_pracownicy,operacja,data_operacji)(SELECT ID_zarobki, data, brutto, ID_pracownicy, 'UPDATE', GETDATE() FROM [inserted]);
+		END
+END;
+
+SELECT * FROM [zarobki_audyt]
+
+CREATE TRIGGER [zamowienia_audyt]
+ON [zamowienia]
+AFTER INSERT
+AS
+	DECLARE @ID BIGINT, @ID_k BIGINT;
+	DECLARE @NR INT, @data DATETIME;
+	SELECT @ID = [ID_zamowienia], @ID_k = [ID_Klienta] FROM [inserted];
+	SELECT @NR = MAX([numer_zamowienia]) FROM [zamowienia];
+	SELECT @data = [data_zamowienia] FROM [zamowienia] WHERE [ID_zamowienia] = @ID;
+begin
+	if (@ID IS NOT NULL) AND (@ID_k IS NOT NULL)
+	BEGIN
+			INSERT INTO [dane]([ID_zamowienia], [imie], [nazwisko],[adres],[miasto],[kod_pocztowy])(SELECT @ID, [imie], [nazwisko], [adres], [miasto], [kod_pocztowy] FROM [klienci] WHERE [ID_klienta] =@ID_k);
+			
+			IF @NR IS NULL
+				BEGIN
+					SET @NR = 0;
+				END
+			UPDATE [zamowienia] SET [numer_zamowienia] = (@NR+1),
+			[data_realizacji] = DATEADD(DAY, 7, @data)
+			WHERE [ID_zamowienia] = @ID;
+	END
+END;
+
+
+/*
+Utworzyc wyzwalacz na tabeli - zamowienia_pozycje - ktory uruchamiany jest zamiast INSERT INTO. 
+Wyzwalacz ma sprawdzic roznice ilosci w magazynie oraz ilosc sztuk zamawianych produktu. 
+Ich roznica ma byc wieksza badz rowna 0 i jest to warunek.
+
+- Jesli spelniony jest warunek wyzwalacz ma obliczyc wartosc netoo, brutto oraz VAT 
+nastepnie wstawic rekord do tabeli - zamowienia_pozycje - uzupelniajac wszystkie pola danymi z odpowiednie tabeli oraz wynikami z wyliczen
+Zaktualizowac w tabeli - produkty - ilosc w magazynie o wartosc z roznicy
+
+- Jesli nie jest spelniony warunek wyzwalacz ma przypisac 0 do wartosci netto, brutto oraz VAT, a 
+w uwadze dac informacje: "!!UWAGA!! Zbyt malo towaru, aby zamowic" nastepnie wstawic rekord
+do tabeli - zamowienia_pozycje - uzupelniajac wszystkie pola danymi z odpowiedniej tabeli.
+
+Obliczyc sume wartosci netto brutto oraz VAT na podstawie tabeli -zamowienia_pozycje - 
+nastepnie zaktualizowwac w tabeli - zamowienia - odpowiednie pola o wyniki z wyliczen.
+
+Przed wyzwalaczem
+Utworzyc 3 funkcje o nazwach:
+1. wartosc_netto - zwracana wartosc to iloczyn ilosc sztuk i cena netto;
+2. wartosc_brutto - zwracana wartosc to iloczyn stawka VAT i wartosc netto - Stawka VAT oblicza sie ze wzoru: (stawka_vat/100.)+1;
+3. wartosc_vat - zwracana wartosc to roznica wartosc brutto i wartosc netto
+*/
